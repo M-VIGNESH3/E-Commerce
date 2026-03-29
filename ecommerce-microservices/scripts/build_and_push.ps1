@@ -1,7 +1,7 @@
-﻿$ErrorActionPreference = "Stop"
+$ErrorActionPreference = "Stop"
 
 # Define your Docker Hub username here. Defaults to 'Clahan Store' based on the existing k8s manifests.
-$DOCKER_USERNAME = "vignesh8386"
+$DOCKER_USERNAME = "team4ofdevops"
 
 # List of microservices to build and push
 $microservices = @(
@@ -31,7 +31,7 @@ Write-Host "Make sure you are logged into Docker Hub (run 'docker login' if you 
 Start-Sleep -Seconds 2
 
 foreach ($service in $microservices) {
-    $imageName = "$DOCKER_USERNAME/$service:latest"
+    $imageName = "$DOCKER_USERNAME/ecommerce:v1.0.0-$service"
     $servicePath = Join-Path $PWD $service
     
     if (Test-Path $servicePath) {

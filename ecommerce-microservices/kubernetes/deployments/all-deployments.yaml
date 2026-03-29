@@ -1,36 +1,9 @@
-﻿apiVersion: v1
+apiVersion: v1
 kind: Namespace
 metadata:
   name: clahanstore
 ---
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: mongodb
-  namespace: clahanstore
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: mongodb
-  template:
-    metadata:
-      labels:
-        app: mongodb
-    spec:
-      containers:
-      - name: mongodb
-        image: mongo:6.0
-        ports:
-        - containerPort: 27017
-        resources:
-          requests:
-            cpu: 50m
-            memory: 128Mi
-          limits:
-            cpu: 500m
-            memory: 512Mi
----
+
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -48,7 +21,7 @@ spec:
     spec:
       containers:
       - name: api-gateway
-        image: vignesh8386/api-gateway:latest
+        image: team4ofdevops/ecommerce:v1.0.0-api-gateway
         ports:
         - containerPort: 3000
         envFrom:
@@ -79,7 +52,7 @@ spec:
     spec:
       containers:
       - name: user-service
-        image: vignesh8386/user-service:latest
+        image: team4ofdevops/ecommerce:v1.0.0-user-service
         ports:
         - containerPort: 3001
         env:
@@ -87,8 +60,8 @@ spec:
           value: '3001'
         - name: MONGO_URI
           valueFrom:
-            configMapKeyRef:
-              name: clahanstore-config
+            secretKeyRef:
+              name: clahanstore-secrets
               key: MONGO_URI_USER
         resources:
           requests:
@@ -115,18 +88,21 @@ spec:
     spec:
       containers:
       - name: auth-service
-        image: vignesh8386/authentication-service:latest
+        image: team4ofdevops/ecommerce:v1.0.0-authentication-service
         ports:
         - containerPort: 3002
         env:
         - name: PORT
           value: '3002'
         - name: JWT_SECRET
-          value: supersecretjwtkey_12345
+          valueFrom:
+            secretKeyRef:
+              name: clahanstore-secrets
+              key: JWT_SECRET
         - name: MONGO_URI
           valueFrom:
-            configMapKeyRef:
-              name: clahanstore-config
+            secretKeyRef:
+              name: clahanstore-secrets
               key: MONGO_URI_AUTH
         resources:
           requests:
@@ -153,7 +129,7 @@ spec:
     spec:
       containers:
       - name: product-service
-        image: vignesh8386/product-service:latest
+        image: team4ofdevops/ecommerce:v1.0.0-product-service
         ports:
         - containerPort: 3003
         env:
@@ -161,8 +137,8 @@ spec:
           value: '3003'
         - name: MONGO_URI
           valueFrom:
-            configMapKeyRef:
-              name: clahanstore-config
+            secretKeyRef:
+              name: clahanstore-secrets
               key: MONGO_URI_PRODUCT
         resources:
           requests:
@@ -189,7 +165,7 @@ spec:
     spec:
       containers:
       - name: search-service
-        image: vignesh8386/search-service:latest
+        image: team4ofdevops/ecommerce:v1.0.0-search-service
         ports:
         - containerPort: 3004
         env:
@@ -202,8 +178,8 @@ spec:
               key: PRODUCT_SERVICE_URL
         - name: MONGO_URI
           valueFrom:
-            configMapKeyRef:
-              name: clahanstore-config
+            secretKeyRef:
+              name: clahanstore-secrets
               key: MONGO_URI_SEARCH
         resources:
           requests:
@@ -230,7 +206,7 @@ spec:
     spec:
       containers:
       - name: inventory-service
-        image: vignesh8386/inventory-service:latest
+        image: team4ofdevops/ecommerce:v1.0.0-inventory-service
         ports:
         - containerPort: 3005
         env:
@@ -238,8 +214,8 @@ spec:
           value: '3005'
         - name: MONGO_URI
           valueFrom:
-            configMapKeyRef:
-              name: clahanstore-config
+            secretKeyRef:
+              name: clahanstore-secrets
               key: MONGO_URI_INVENTORY
         resources:
           requests:
@@ -266,7 +242,7 @@ spec:
     spec:
       containers:
       - name: cart-service
-        image: vignesh8386/cart-service:latest
+        image: team4ofdevops/ecommerce:v1.0.0-cart-service
         ports:
         - containerPort: 3006
         env:
@@ -284,8 +260,8 @@ spec:
               key: INVENTORY_SERVICE_URL
         - name: MONGO_URI
           valueFrom:
-            configMapKeyRef:
-              name: clahanstore-config
+            secretKeyRef:
+              name: clahanstore-secrets
               key: MONGO_URI_CART
         resources:
           requests:
@@ -312,7 +288,7 @@ spec:
     spec:
       containers:
       - name: wishlist-service
-        image: vignesh8386/wishlist-service:latest
+        image: team4ofdevops/ecommerce:v1.0.0-wishlist-service
         ports:
         - containerPort: 3007
         env:
@@ -325,8 +301,8 @@ spec:
               key: PRODUCT_SERVICE_URL
         - name: MONGO_URI
           valueFrom:
-            configMapKeyRef:
-              name: clahanstore-config
+            secretKeyRef:
+              name: clahanstore-secrets
               key: MONGO_URI_WISHLIST
         resources:
           requests:
@@ -353,7 +329,7 @@ spec:
     spec:
       containers:
       - name: order-service
-        image: vignesh8386/order-service:latest
+        image: team4ofdevops/ecommerce:v1.0.0-order-service
         ports:
         - containerPort: 3008
         env:
@@ -361,8 +337,8 @@ spec:
           value: '3008'
         - name: MONGO_URI
           valueFrom:
-            configMapKeyRef:
-              name: clahanstore-config
+            secretKeyRef:
+              name: clahanstore-secrets
               key: MONGO_URI_ORDER
         resources:
           requests:
@@ -389,7 +365,7 @@ spec:
     spec:
       containers:
       - name: payment-service
-        image: vignesh8386/payment-service:latest
+        image: team4ofdevops/ecommerce:v1.0.0-payment-service
         ports:
         - containerPort: 3009
         env:
@@ -402,8 +378,8 @@ spec:
               key: ORDER_SERVICE_URL
         - name: MONGO_URI
           valueFrom:
-            configMapKeyRef:
-              name: clahanstore-config
+            secretKeyRef:
+              name: clahanstore-secrets
               key: MONGO_URI_PAYMENT
         resources:
           requests:
@@ -430,7 +406,7 @@ spec:
     spec:
       containers:
       - name: invoice-service
-        image: vignesh8386/invoice-service:latest
+        image: team4ofdevops/ecommerce:v1.0.0-invoice-service
         ports:
         - containerPort: 3010
         env:
@@ -448,8 +424,8 @@ spec:
               key: PAYMENT_SERVICE_URL
         - name: MONGO_URI
           valueFrom:
-            configMapKeyRef:
-              name: clahanstore-config
+            secretKeyRef:
+              name: clahanstore-secrets
               key: MONGO_URI_INVOICE
         resources:
           requests:
@@ -476,7 +452,7 @@ spec:
     spec:
       containers:
       - name: shipping-service
-        image: vignesh8386/shipping-service:latest
+        image: team4ofdevops/ecommerce:v1.0.0-shipping-service
         ports:
         - containerPort: 3011
         env:
@@ -489,8 +465,8 @@ spec:
               key: ORDER_SERVICE_URL
         - name: MONGO_URI
           valueFrom:
-            configMapKeyRef:
-              name: clahanstore-config
+            secretKeyRef:
+              name: clahanstore-secrets
               key: MONGO_URI_SHIPPING
         resources:
           requests:
@@ -517,7 +493,7 @@ spec:
     spec:
       containers:
       - name: review-rating-service
-        image: vignesh8386/review-rating-service:latest
+        image: team4ofdevops/ecommerce:v1.0.0-review-rating-service
         ports:
         - containerPort: 3012
         env:
@@ -530,8 +506,8 @@ spec:
               key: PRODUCT_SERVICE_URL
         - name: MONGO_URI
           valueFrom:
-            configMapKeyRef:
-              name: clahanstore-config
+            secretKeyRef:
+              name: clahanstore-secrets
               key: MONGO_URI_REVIEW
         resources:
           requests:
@@ -558,7 +534,7 @@ spec:
     spec:
       containers:
       - name: recommendation-service
-        image: vignesh8386/recommendation-service:latest
+        image: team4ofdevops/ecommerce:v1.0.0-recommendation-service
         ports:
         - containerPort: 3013
         env:
@@ -581,8 +557,8 @@ spec:
               key: ORDER_SERVICE_URL
         - name: MONGO_URI
           valueFrom:
-            configMapKeyRef:
-              name: clahanstore-config
+            secretKeyRef:
+              name: clahanstore-secrets
               key: MONGO_URI_RECOMMENDATION
         resources:
           requests:
@@ -609,7 +585,7 @@ spec:
     spec:
       containers:
       - name: admin-service
-        image: vignesh8386/admin-service:latest
+        image: team4ofdevops/ecommerce:v1.0.0-admin-service
         ports:
         - containerPort: 3014
         env:
@@ -642,8 +618,8 @@ spec:
               key: SHIPPING_SERVICE_URL
         - name: MONGO_URI
           valueFrom:
-            configMapKeyRef:
-              name: clahanstore-config
+            secretKeyRef:
+              name: clahanstore-secrets
               key: MONGO_URI_ADMIN
         resources:
           requests:
@@ -670,7 +646,7 @@ spec:
     spec:
       containers:
       - name: frontend-ui
-        image: vignesh8386/frontend-ui:latest
+        image: team4ofdevops/ecommerce:v1.0.0-frontend-ui
         ports:
         - containerPort: 80
         resources:

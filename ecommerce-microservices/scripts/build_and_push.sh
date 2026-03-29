@@ -2,7 +2,7 @@
 set -e
 
 # Define your Docker Hub username here.
-DOCKER_USERNAME="vignesh8386"
+DOCKER_USERNAME="team4ofdevops"
 
 # List of microservices to build and push
 MICROSERVICES=(
@@ -30,7 +30,7 @@ echo "Make sure you are logged into Docker Hub (run 'docker login' if you haven'
 sleep 2
 
 for SERVICE in "${MICROSERVICES[@]}"; do
-    IMAGE_NAME="$DOCKER_USERNAME/$SERVICE:latest"
+    IMAGE_NAME="$DOCKER_USERNAME/ecommerce:v1.0.0-$SERVICE"
     
     if [ -d "$SERVICE" ]; then
         echo -e "\n======================================================="
