@@ -79,3 +79,5 @@ wishlistService:
     repository: team4devops/ecommerce-wishlist-service
     tag: v1.0.0
   replicas: 1
+storageClass:
+  name: ecommerce-nfs-client
