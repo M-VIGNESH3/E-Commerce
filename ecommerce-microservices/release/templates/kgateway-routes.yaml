@@ -1,3 +1,19 @@
+{{- if .Values.gateway.enabled }}
+apiVersion: gateway.networking.k8s.io/v1
+kind: Gateway
+metadata:
+  name: {{ .Values.gateway.name }}
+  namespace: {{ .Values.namespace }}
+spec:
+  gatewayClassName: {{ .Values.gateway.className }}
+  listeners:
+  - name: http
+    protocol: HTTP
+    port: {{ .Values.gateway.port }}
+    allowedRoutes:
+      namespaces:
+        from: Same
+---
 apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
 metadata:
@@ -5,7 +21,7 @@ metadata:
   namespace: {{ .Values.namespace }}
 spec:
   parentRefs:
-  - name: ecommerce-gateway
+  - name: {{ .Values.gateway.name }}
   rules:
   - matches:
     - path:
@@ -119,3 +135,4 @@ spec:
     backendRefs:
     - name: frontend-ui
       port: 80
+{{- end }}

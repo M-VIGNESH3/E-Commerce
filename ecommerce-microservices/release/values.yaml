@@ -84,3 +84,14 @@ wishlistService:
     repository: team4devops/ecommerce-wishlist-service
     tag: v1.0.0
   replicas: 1
+
+storageClass:
+  enabled: true
+  name: nfs-client
+  provisioner: k8s-sigs.io/nfs-subdir-external-provisioner
+
+gateway:
+  enabled: true
+  name: ecommerce-gateway
+  className: kgateway
+  port: 80
