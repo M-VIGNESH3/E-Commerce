@@ -10,8 +10,7 @@ files_to_process = [
     r'kubernetes\ingress\kgateway-routes.yaml',
     r'kubernetes\ingress\metallb-config.yaml',
     r'kubernetes\hpa\all-hpa.yaml',
-    r'kubernetes\deployments\mongodb-statefulset.yaml',
-    r'kubernetes\services\nfs-storageclass.yaml'
+    r'kubernetes\deployments\mongodb-statefulset.yaml'
 ]
 
 RELEASE_DIR = r'release'
